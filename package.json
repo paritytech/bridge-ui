@@ -14,9 +14,13 @@
     "start": "parcel src/index.html"
   },
   "dependencies": {
+    "blockies-ts": "^1.0.0",
     "ethers": "^5.0.9",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^1.2.1",
+    "styled-components": "^5.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.11.4",
@@ -24,6 +28,7 @@
     "@babel/preset-react": "^7.10.4",
     "@types/react": "^16.9.48",
     "@types/react-dom": "^16.9.8",
+    "@types/styled-components": "^5.1.2",
     "@typescript-eslint/eslint-plugin": "^3.10.1",
     "@typescript-eslint/parser": "^3.10.1",
     "eslint": "^7.7.0",
