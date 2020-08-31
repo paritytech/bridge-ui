@@ -1,0 +1,42 @@
+{
+  "name": "bridge-ui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "Thibaut Sardan",
+  "license": "Apache-2.0",
+  "scripts": {
+    "clean": "rm dist/bundle.js",
+    "build-prod": "parcel build src/index.html",
+    "lint": "npx eslint ./src/ --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "npx eslint ./src/ --ext .js,.jsx,.ts,.tsx --fix",
+    "start": "parcel src/index.html"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.4",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-react": "^7.10.4",
+    "@types/react": "^16.9.48",
+    "@types/react-dom": "^16.9.8",
+    "@typescript-eslint/eslint-plugin": "^3.10.1",
+    "@typescript-eslint/parser": "^3.10.1",
+    "eslint": "^7.7.0",
+    "eslint-config-semistandard": "^15.0.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-header": "^3.0.0",
+    "eslint-plugin-import": "^2.21.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-hooks": "^4.0.4",
+    "eslint-plugin-simple-import-sort": "^5.0.3",
+    "eslint-plugin-standard": "^4.0.1",
+    "parcel-bundler": "^1.12.4",
+    "typescript": "^4.0.2"
+  }
+}
