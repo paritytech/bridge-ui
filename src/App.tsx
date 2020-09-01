@@ -7,7 +7,7 @@ import { WsProvider } from '@polkadot/api';
 import { ethers } from 'ethers';
 import React from 'react';
 
-import Menu from './components/Header';
+import Menu from './components/MenuBar';
 import { ApiPromiseContextProvider } from './context/ApiPromiseContext';
 import customTypes from './customTypes';
 import EthToSub from './screens/EthToSub';

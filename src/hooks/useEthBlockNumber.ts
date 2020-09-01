@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 interface Props{
     ethProvider: ethers.providers.Web3Provider
 }
+
 const useEthBlockNumber = ({ ethProvider }: Props) => {
 	const [blockNumber, setBlockNumber] = useState(0);
 

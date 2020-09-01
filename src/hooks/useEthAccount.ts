@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 
 const useEthAccount = () => {
 	const [ethAccount, setEthAccount] = useState('');
+
 	useEffect(() => {
 		setEthAccount(window.ethereum.selectedAddress as string);
 		window.ethereum.on('accountsChanged', (accounts: Array<string>) => setEthAccount(accounts[0]));
