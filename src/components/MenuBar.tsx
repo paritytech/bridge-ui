@@ -11,9 +11,7 @@ const Header = () => (
           Bridge UI
 		</Menu.Item>
 
-		<Menu.Item  name='home' href="/somelink"/>
-		<Menu.Item  name='posts' href="/somelink"/>
-		<Menu.Item  name='contact' href="/somelink"/>
+		{/* <Menu.Item  name='ETH to SUB' href="#"/> */}
 	</Menu>
 );
 
