@@ -14,9 +14,14 @@
     "start": "parcel src/index.html"
   },
   "dependencies": {
+    "@polkadot/api": "^1.13.1",
+    "@polkadot/extension-inject": "^0.21.1",
+    "@polkadot/rpc-provider": "^1.31.2",
+    "@polkadot/util": "^3.4.1",
+    "@substrate/context": "^0.5.1",
     "blockies-ts": "^1.0.0",
     "ethers": "^5.0.9",
-    "react": "^16.13.1",
+    "react": "^16.9",
     "react-dom": "^16.13.1",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^1.2.1",
