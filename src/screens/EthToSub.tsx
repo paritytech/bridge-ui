@@ -2,14 +2,19 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { formatBalance } from '@polkadot/util';
+import { Keyring } from '@polkadot/api';
+import Identicon from '@polkadot/react-identicon';
+import { formatBalance, u8aToHex } from '@polkadot/util';
 import * as blockies from 'blockies-ts';
 import { BigNumber,ethers } from 'ethers';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo,useState } from 'react';
 import { Button, Container, Icon, Input, InputOnChangeData, Label } from 'semantic-ui-react';
 import styled from 'styled-components';
 
 import { ApiPromiseContext } from '../context/ApiPromiseContext';
+import useEthAccount from '../hooks/useEthAccount';
+import useEthBlockNumber from '../hooks/useEthBlockNumber';
+import useRialtoBlocks from '../hooks/useRialtoBlocks';
 
 interface Props {
     className?: string
@@ -17,23 +22,31 @@ interface Props {
 }
 
 const zero = BigNumber.from(0);
+const keyring = new Keyring({ type: 'sr25519' });
 
 const EthToSub = ({ className, ethProvider } : Props) => {
 	const { api } = useContext(ApiPromiseContext);
 	const signer = ethProvider.getSigner();
-	const [blockNumber, setBlockNumber] = useState(0);
-	const [ethAccount, setEthAccount] = useState('');
+
 	const [errorMessage, setErrorMessage] = useState('');
 	const [ethAccountBalance, setEthAccountBalance] = useState<ethers.BigNumber>(zero);
 	const [amount, setAmount] = useState('');
 	const [receiver, setReceiver] = useState('');
 	const [receiverBalance, setReceiverBalance] = useState('');
+	const { blockNumber } = useEthBlockNumber({ ethProvider });
+	const { ethAccount } = useEthAccount();
+	const { bestFinalizedBlock: bestRialtoFinalizedBlock, bestBlock: bestRialtoBlock } = useRialtoBlocks();
 
-	const imgSrc = blockies.create({ seed: ethAccount }).toDataURL();
+	useEffect(() => {
+		ethProvider.getBalance(ethAccount)
+			.then(balance => setEthAccountBalance(balance));
+	}, [ethAccount, ethProvider]);
+
+	const imgSrc = useMemo(() => blockies.create({ seed: ethAccount }).toDataURL(), [ethAccount]);
 
 	const sendTx = () => signer.sendTransaction({
 		// AccounId to hex from 5Ev8deqBc5bXB2pq2C9RWCBXM1kuS6wjqbZJiSRTA8kLZfTu
-		data: '0x7e2ae4cfcf198ca3bb3312e6409c65e87294c67a73d9cb00bd72e8deca626347',
+		data: u8aToHex(keyring.decodeAddress(receiver)),
 		to: '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF',
 		value: ethers.utils.parseEther(amount)
 	})
@@ -42,11 +55,12 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 
 	useEffect(() => {
 		if (!api) {
+			console.log('api not ready yet...');
 			return;
 		}
 
 		let unsubscribe: () => void;
-		if(api.isReady && receiver){
+		if(receiver){
 			api.derive.balances.account(receiver,
 				data => setReceiverBalance( data.freeBalance.toString()))
 				.then( unsub => {unsubscribe = unsub;})
@@ -55,30 +69,6 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 
 		return () => unsubscribe && unsubscribe();
 	}, [api, receiver]);
-
-	useEffect(() => {
-		window.ethereum.on('accountsChanged', (accounts: Array<string>) => setEthAccount(accounts[0]));
-	},[]);
-
-	useEffect(() => {
-		ethProvider.getBalance(ethAccount)
-			.then(balance => setEthAccountBalance(balance))
-			.catch(
-				//no need to do anything here
-			);
-	},[ethAccount, ethProvider, blockNumber]);
-
-	useEffect(() => {
-		ethProvider.listAccounts()
-			.then(accounts => setEthAccount(accounts[0]))
-			.catch(
-			//no need to do anything here
-			);
-	}, [ethProvider]);
-
-	useEffect(() => {
-		ethProvider.on('block', (blockNumber: number) => setBlockNumber(blockNumber));
-	}, [ethProvider]);
 
 	const changeReceiver = (_: any , data: InputOnChangeData) => {
 		setReceiver(data.value);
@@ -103,12 +93,15 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 	return (
 		<Container className={className}>
 			<div>
-                block: {blockNumber}<br/>
-                account: <img src={imgSrc}/> {ethAccount}<br/>
-                balance: {ethers.utils.formatEther(ethAccountBalance)} ETH<br/>
+				Bridge finalized block: {bestRialtoFinalizedBlock}<br/>
+				Bridge block: {bestRialtoBlock}<br/>
+                Block: {blockNumber}<br/>
+                Account: {!!imgSrc && <img src={imgSrc}/>} {ethAccount}<br/>
+                Balance: {ethers.utils.formatEther(ethAccountBalance)} ETH<br/>
 			</div>
 			<Input className='largeInput' label='amount' onChange={changeValue} value={amount}/><br/>
-			<Input className='largeInput' label='to' onChange={changeReceiver} value={receiver}/><Label>{formatBalance(receiverBalance, { withUnit: false })} SUB</Label><br/>
+			<Input className='largeInput' label='to' onChange={changeReceiver} value={receiver}/><br/>
+			<Identicon value={receiver}/><Label>{formatBalance(receiverBalance, { withUnit: false })} SUB</Label><br/>
 			<Button
 				primary
 				onClick={sendTx}
