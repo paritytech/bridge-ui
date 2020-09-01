@@ -8,11 +8,11 @@
   "license": "Apache-2.0",
   "scripts": {
     "clean": "rm dist/bundle.js",
-    "build-prod": "parcel build src/index.html",
+    "build": "rm -rf .cache dist && parcel build index.html --public-url ./bridge-ui/",
     "lint": "npx eslint ./src/ --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "npx eslint ./src/ --ext .js,.jsx,.ts,.tsx --fix",
     "start": "parcel src/index.html",
-    "publish": "yarn build-prod && git subtree push --prefix dist origin gh-pages"
+    "publish": "yarn build && git subtree push --prefix dist origin gh-pages"
   },
   "dependencies": {
     "@polkadot/api": "^1.13.1",
