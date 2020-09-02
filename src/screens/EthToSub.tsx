@@ -115,19 +115,16 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 	};
 
 	const changeValue = (_: any , data: InputOnChangeData) => {
-		if (checkValue(data.value)){
-			setErrorMessage('');
-			setAmount(data.value);
-		}
+		checkValue(data.value);
+		setAmount(data.value);
 	};
 
 	const checkValue = (amount: string) => {
-		if( !amount || amount.match(/\d+(,\d+)*(\.\d+)?/)){
-			return true;
+		if( !amount || amount.match(/^\d+(,\d+)*(\.\d+)?$/)){
+			setErrorMessage('');
+		} else {
+			setErrorMessage('Wrong amount.');
 		}
-
-		setErrorMessage('Wrong amount');
-		return false;
 	};
 
 	return (
