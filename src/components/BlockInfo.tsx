@@ -44,8 +44,7 @@ const BlockInfo = ({ className, ethProvider }: Props) => {
 					<div>
 						<h2>Substrate</h2>
 						<div className='blockNumber'>
-								Best: #{bestSubBlock}<br/>
-							{/* Finalized: #{bestSubFinalizedBlock} */}
+							Best: #{bestSubBlock}<br/>
 						</div>
 					</div>
 				</Grid.Column>
