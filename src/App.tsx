@@ -59,9 +59,16 @@ const App = () => {
 	);
 };
 
-function EthError() {
+const EthError = () => {
+	const EthErrorDiv = styled.div`
+	height: 90vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+`;
 	return (
-		<div className='noMetamask'>
+		<EthErrorDiv>
 			<h1>Couldn&apos;t connect to Rialto Ethereum node</h1>
 			<h3>
 				Make sure to install & enable
@@ -72,16 +79,8 @@ function EthError() {
 				/>
 				Metamask extension
 			</h3>
-		</div>
+		</EthErrorDiv>
 	);
-}
+};
 
-export default styled(App)`
-	.noMetamask {
-		height: 90vh;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		flex-direction: column;
-	}
-`;
+export default App;
