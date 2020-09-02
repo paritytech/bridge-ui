@@ -12,7 +12,7 @@
     "lint": "npx eslint ./src/ --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "npx eslint ./src/ --ext .js,.jsx,.ts,.tsx --fix",
     "start": "parcel src/index.html",
-    "publish": "yarn build && git subtree push --prefix dist origin gh-pages"
+    "publish-gh-page": "yarn build && git subtree push --prefix dist origin gh-pages"
   },
   "dependencies": {
     "@polkadot/api": "^1.13.1",
