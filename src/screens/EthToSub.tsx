@@ -19,15 +19,15 @@ import useRialtoBlocks from '../hooks/useRialtoBlocks';
 import shortenAddress from '../util/shortenAddress';
 
 interface Props {
-    className?: string
-    ethProvider: ethers.providers.Web3Provider
+    className?: string;
+	ethProvider: ethers.providers.Web3Provider;
 }
 
 interface sendStatusType {
-	blockNumber?: number,
-	txHash?: string,
-	sending?: boolean,
-	message?: string,
+	blockNumber?: number;
+	txHash?: string;
+	sending?: boolean;
+	message?: string;
 }
 
 const keyring = new Keyring({ type: 'sr25519' });
@@ -54,7 +54,6 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 		});
 
 		signer.sendTransaction({
-		// AccounId to hex from 5Ev8deqBc5bXB2pq2C9RWCBXM1kuS6wjqbZJiSRTA8kLZfTu
 			data: u8aToHex(keyring.decodeAddress(receiver)),
 			to: '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF',
 			value: ethers.utils.parseEther(amount)
@@ -88,7 +87,6 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 
 	useEffect(() => {
 		if(sendStatus.sending && sendStatus.blockNumber){
-			console.log('bestRialtoFinalizedBlock', Number(bestRialtoFinalizedBlock), sendStatus.blockNumber, Number(bestRialtoFinalizedBlock) >= sendStatus.blockNumber);
 			if (Number(bestRialtoFinalizedBlock) >= sendStatus.blockNumber){
 				setSendStatus({ message: '', sending: false });
 			}
@@ -142,9 +140,13 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 					<Grid.Column width={2}/>
 					<Grid.Column className='accountCard' width={5}>
 						<div className='balance'>ETH account</div>
-						<div>{!!imgSrc && <img src={imgSrc} height={52}/>}</div>
-						<div>{shortenAddress(ethAccount, true)}</div>
-						<div className='balance'>{ethers.utils.formatEther(ethAccountBalance)} ETH</div>
+						{!!ethAccount && (
+							<>
+								<div>{!!imgSrc && <img src={imgSrc} height={52}/>}</div>
+								<div>{shortenAddress(ethAccount, true)}</div>
+								<div className='balance'>{ethers.utils.formatEther(ethAccountBalance)} ETH</div>
+							</>
+						)}
 					</Grid.Column>
 					<Grid.Column width={2} className='arrow'>
 						<Icon name='arrow right'/>
@@ -164,7 +166,7 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 					<Input
 						className='largeInput'
 						disabled={sendStatus.sending}
-						label='Reciever'
+						label='Receiver'
 						placeholder='5Ev8deqBc5bXB2pq2C9RWCBXM1kuS6wjqbZJiSRTA8kLZfTu'
 						onChange={changeReceiver}
 						value={receiver}
@@ -173,6 +175,7 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 				<Grid.Row>
 					<Input
 						className='largeInput'
+						error={!!errorMessage}
 						disabled={sendStatus.sending}
 						label='Amount'
 						placeholder='1.23'
@@ -180,6 +183,7 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 						value={amount}
 					/>
 				</Grid.Row>
+				{errorMessage && <div className='errorMessage'>{errorMessage}</div>}
 				<Grid.Row>
 					<Button
 						disabled={!!errorMessage || !amount}
@@ -194,7 +198,6 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 
 					</Button>
 				</Grid.Row>
-				{errorMessage && <div>{errorMessage}</div>}
 			</Grid>
 		</Container>
 	);
@@ -205,6 +208,10 @@ export default styled(EthToSub)`
 		text-align: center;
 		font-size: 3rem;
 		margin-top: 3rem;
+	}
+
+	.errorMessage {
+		color: darkred
 	}
 
     .largeInput {

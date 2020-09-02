@@ -6,8 +6,9 @@ import 'semantic-ui-css/semantic.min.css';
 import { WsProvider } from '@polkadot/api';
 import { ethers } from 'ethers';
 import React from 'react';
-import styled from 'styled-components';
+import { Icon } from 'semantic-ui-react';
 
+import ErrorMessage from './components/ErrorMessage';
 import Menu from './components/MenuBar';
 import { ApiPromiseContextProvider } from './context/ApiPromiseContext';
 import customTypes from './customTypes';
@@ -20,10 +21,10 @@ declare global {
 
 window.ethereum = window.ethereum || {};
 
+const WS_PROVIDER = 'wss://wss.rialto.brucke.link/';
+const EXPECTED_NETWORK_ID = 105; // Rialto
+
 const App = () => {
-
-	const WS_PROVIDER = 'wss://wss.rialto.brucke.link/';
-
 	if (!WS_PROVIDER) {
 		console.error('Env variable WS_PROVIDER not set');
 		return null;
@@ -37,15 +38,39 @@ const App = () => {
 		// what Metamask injects as window.ethereum into each page
 		ethProvider = new ethers.providers.Web3Provider(window.ethereum);
 	} catch (e) {
-		return (
-			<EthError />
-		);
+		return (<ErrorMessage>
+			<>
+				<h1>Couldn&apos;t connect to Rialto Ethereum node</h1>
+				<h3>
+							Make sure to install & enable
+					<img
+						src='https://avatars0.githubusercontent.com/u/11744586?s=280&v=4'
+					/>
+							Metamask extension
+				</h3>
+			</>
+		</ErrorMessage>);
 	}
 
 	// The Metamask plugin also allows signing transactions to
 	// send ether and pay to change state within the blockchain.
 	// For this, we need the account signer...
 	window.ethereum.enable();
+	window.ethereum.on('chainChanged', () => {
+		// Handle the new chain.
+		// Correctly handling chain changes can be complicated.
+		// We recommend reloading the page unless you have a very good reason not to.
+		window.location.reload();
+	});
+
+	if (Number(window.ethereum.networkVersion) !== EXPECTED_NETWORK_ID){
+		return (<ErrorMessage>
+			<>
+				<h1><Icon name='warning circle'/>Unexpected network</h1>
+				<h3>Please connect Metamask to Rialto (using {WS_PROVIDER})</h3>
+			</>
+		</ErrorMessage>);
+	}
 
 	return (
 		<>
@@ -56,34 +81,6 @@ const App = () => {
 				</>
 			</ApiPromiseContextProvider>
 		</>
-	);
-};
-
-const EthError = () => {
-	const EthErrorDiv = styled.div`
-		height: 90vh;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		flex-direction: column;
-
-		img {
-			margin: 10px;
-			vertical-align: middle;
-			width: 32px;
-		}
-`;
-	return (
-		<EthErrorDiv>
-			<h1>Couldn&apos;t connect to Rialto Ethereum node</h1>
-			<h3>
-				Make sure to install & enable
-				<img
-					src='https://avatars0.githubusercontent.com/u/11744586?s=280&v=4'
-				/>
-				Metamask extension
-			</h3>
-		</EthErrorDiv>
 	);
 };
 
