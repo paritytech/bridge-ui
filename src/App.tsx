@@ -33,10 +33,16 @@ const App = () => {
 	}
 
 	const wsProvider = new WsProvider(WS_PROVIDER);
-
-	// A Web3Provider wraps a standard Web3 provider, which is
-	// what Metamask injects as window.ethereum into each page
-	const ethProvider = new ethers.providers.Web3Provider(window.ethereum);
+  
+  try {
+    // A Web3Provider wraps a standard Web3 provider, which is
+    // what Metamask injects as window.ethereum into each page
+    const ethProvider = new ethers.providers.Web3Provider(window.ethereum);
+  } catch (e) {
+    return (
+      <EthError />
+    );
+  }
 
 	// The Metamask plugin also allows signing transactions to
 	// send ether and pay to change state within the blockchain.
@@ -54,5 +60,29 @@ const App = () => {
 		</>
 	);
 };
+
+function EthError() {
+  const style: any = {
+    height: '90vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+  };
+  return (
+      <div style={style}>
+        <h1>Couldn't connect to Rialto Ethereum node</h1>
+        <h3>
+          Make sure to install & enable
+          <img
+            src='https://avatars0.githubusercontent.com/u/11744586?s=280&v=4'
+            width='32'
+            style={{ margin: '10px', verticalAlign: 'middle' }}
+          />
+          Metamask extension
+        </h3>
+      </div>
+  );
+}
 
 export default App;
