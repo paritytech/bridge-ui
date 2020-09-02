@@ -22,6 +22,7 @@ declare global {
 window.ethereum = window.ethereum || {};
 
 const WS_PROVIDER = 'wss://wss.rialto.brucke.link/';
+const ETHEREUM_NODE = 'http://rpc.rialto.brucke.link:8545';
 const EXPECTED_NETWORK_ID = 105; // Rialto
 
 const App = () => {
@@ -64,12 +65,14 @@ const App = () => {
 	});
 
 	if (Number(window.ethereum.networkVersion) !== EXPECTED_NETWORK_ID){
-		return (<ErrorMessage>
-			<>
-				<h1><Icon name='warning circle'/>Unexpected network</h1>
-				<h3>Please connect Metamask to Rialto (using {WS_PROVIDER})</h3>
-			</>
-		</ErrorMessage>);
+		return (
+			<ErrorMessage>
+				<>
+					<h1><Icon name='warning circle'/>Unexpected network</h1>
+					<h3>Please connect Metamask to Rialto (using {ETHEREUM_NODE})</h3>
+				</>
+			</ErrorMessage>
+		);
 	}
 
 	return (

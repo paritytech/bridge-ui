@@ -19,7 +19,7 @@ import useRialtoBlocks from '../hooks/useRialtoBlocks';
 import shortenAddress from '../util/shortenAddress';
 
 interface Props {
-    className?: string;
+	className?: string;
 	ethProvider: ethers.providers.Web3Provider;
 }
 
