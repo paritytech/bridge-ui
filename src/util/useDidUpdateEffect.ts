@@ -17,11 +17,10 @@ export function useDidUpdateEffect(
 	inputs?: DependencyList
 ): void {
 	const didMountRef = useRef(false);
-	const depList: DependencyList = inputs ? [...inputs, fn] : [fn];
 
 	return useEffect(() => {
 		if (didMountRef.current) fn();
 		else didMountRef.current = true;
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, depList);
+	}, inputs);
 }
