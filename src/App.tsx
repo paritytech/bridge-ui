@@ -61,12 +61,19 @@ const App = () => {
 
 const EthError = () => {
 	const EthErrorDiv = styled.div`
-	height: 90vh;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
-`;
+		height: 90vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+
+		img {
+			margin: 10px;
+			vertical-align: middle;
+			width: 32px;
+		}
+	`;
+
 	return (
 		<EthErrorDiv>
 			<h1>Couldn&apos;t connect to Rialto Ethereum node</h1>
@@ -74,8 +81,6 @@ const EthError = () => {
 				Make sure to install & enable
 				<img
 					src='https://avatars0.githubusercontent.com/u/11744586?s=280&v=4'
-					width='32'
-					style={{ margin: '10px', verticalAlign: 'middle' }}
 				/>
 				Metamask extension
 			</h3>
