@@ -14,6 +14,10 @@ const useEthBalance = ({ account, ethProvider }: Props) => {
 	const [balance, setBalance] = useState(BigNumber.from(0));
 
 	useEffect(() => {
+		if (!account) {
+			return;
+		}
+
 		ethProvider.on('block', () => ethProvider.getBalance(account)
 			.then(b => setBalance(b)));
 	}, [account, ethProvider]);

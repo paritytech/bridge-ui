@@ -12,6 +12,7 @@ import { Button, Container, Grid,Icon, Input, InputOnChangeData, Loader } from '
 import styled from 'styled-components';
 
 import BlockInfo from '../components/BlockInfo';
+import { addresses } from '../constants';
 import { ApiPromiseContext } from '../context/ApiPromiseContext';
 import useEthAccount from '../hooks/useEthAccount';
 import useEthBalance from '../hooks/useEthBalance';
@@ -40,8 +41,10 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 	const signer = ethProvider.getSigner();
 
 	const [errorMessage, setErrorMessage] = useState('');
+	const [amountInput, setAmountInput] = useState('');
 	const [amount, setAmount] = useState('');
 	const [receiver, setReceiver] = useState('joshy');
+	const [receiverAddress, setReceiverAddress] = useState(addresses['joshy']);
 	const [receiverBalance, setReceiverBalance] = useState('');
 	const { ethAccount } = useEthAccount();
 	const { balance: ethAccountBalance } = useEthBalance({ account: ethAccount , ethProvider });
@@ -56,12 +59,10 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 			sending: true
 		});
 
-		const amountRaw = parseAmount(amount);
-
 		signer.sendTransaction({
-			data: u8aToHex(keyring.decodeAddress(receiver)),
+			data: u8aToHex(keyring.decodeAddress(receiverAddress)),
 			to: '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF',
-			value: ethers.utils.parseEther(amountRaw)
+			value: ethers.utils.parseEther(amount)
 		})
 			.then(response => {
 				setSendStatus({
@@ -105,36 +106,33 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 		}
 
 		let unsubscribe: () => void;
-		if (receiver) {
-			const recv = parseReceiver(receiver);
-			api.derive.balances.account(recv,
+		if (receiverAddress) {
+			api.derive.balances.account(receiverAddress,
 				data => setReceiverBalance( data.freeBalance.toString()))
 				.then( unsub => {unsubscribe = unsub;})
 				.catch(console.error);
 		}
 
 		return () => unsubscribe && unsubscribe();
-	}, [api, isApiReady, receiver]);
+	}, [api, isApiReady, receiverAddress]);
 
-	const changeReceiver = (_: any , data: InputOnChangeData) => {
-		setReceiver(data.value);
-	};
-
-	const changeValue = (_: any , data: InputOnChangeData) => {
-		checkValue(data.value);
-		setAmount(data.value);
-	};
-
-	const checkValue = (rawAmount: string) => {
-		const amount = parseAmount(rawAmount);
-		if( !amount || amount.match(/^\d+(,\d+)*(\.\d+)?$/)){
+	useEffect(() => {
+		if( !amount || amount.match(/^\d+(\.\d+)?$/)){
 			setErrorMessage('');
 		} else {
 			setErrorMessage('Wrong amount.');
 		}
+	}, [amount]);
+
+	const changeReceiver = (_: any , data: InputOnChangeData) => {
+		setReceiver(data.value);
+		setReceiverAddress(parseReceiver(data.value));
 	};
 
-	const receiverAddress = parseReceiver(receiver);
+	const changeValue = (_: any , data: InputOnChangeData) => {
+		setAmountInput(data.value);
+		setAmount(parseAmount(data.value));
+	};
 
 	return (
 		<Container className={className}>
@@ -154,7 +152,7 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 									className='balance'
 									title={ethers.utils.formatEther(ethAccountBalance)}
 								>
-									{toEthBalance(ethAccountBalance)} ETH
+									{toEthBalance(ethAccountBalance.toString())} ETH
 								</div>
 							</>
 						)}
@@ -200,13 +198,13 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 						label='Amount'
 						placeholder='1k|1M|1000'
 						onChange={changeValue}
-						value={amount}
+						value={amountInput}
 					/>
 				</Grid.Row>
 				{errorMessage && <div className='errorMessage'>{errorMessage}</div>}
 				<Grid.Row>
 					<Button
-						disabled={!!errorMessage || !amount}
+						disabled={!!errorMessage || !amountInput}
 						primary
 						onClick={() => !sendStatus.sending && sendTx()}
 

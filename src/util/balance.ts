@@ -3,8 +3,8 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 import { formatBalance } from '@polkadot/util';
 
-// Convert a `BigInt` into a nicely formatted ETH balance string.
-export function toEthBalance(v: BigInt) {
+// Convert a `BigNumber` into a nicely formatted ETH balance string.
+export function toEthBalance(v: string) {
 	return formatBalance(v.toString(), {
 		decimals: 18,
 		withSi: true,
@@ -14,7 +14,7 @@ export function toEthBalance(v: BigInt) {
 }
 
 // Convert a number or string into a nicely formatted substrate balance string.
-export function toSubBalance(v: number|string) {
+export function toSubBalance(v: number | string) {
 	return formatBalance(v, {
 		decimals: 9,
 		withSi: true,
