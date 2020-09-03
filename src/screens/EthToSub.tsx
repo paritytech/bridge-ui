@@ -38,7 +38,7 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 
 	const [errorMessage, setErrorMessage] = useState('');
 	const [amount, setAmount] = useState('');
-	const [receiver, setReceiver] = useState('');
+	const [receiver, setReceiver] = useState('joshy');
 	const [receiverBalance, setReceiverBalance] = useState('');
 	const { ethAccount } = useEthAccount();
 	const { balance: ethAccountBalance } = useEthBalance({ account: ethAccount , ethProvider });
@@ -53,10 +53,12 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 			sending: true
 		});
 
+		const amountRaw = parseAmount(amount);
+
 		signer.sendTransaction({
 			data: u8aToHex(keyring.decodeAddress(receiver)),
 			to: '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF',
-			value: ethers.utils.parseEther(amount)
+			value: ethers.utils.parseEther(amountRaw)
 		})
 			.then(response => {
 				setSendStatus({
@@ -100,8 +102,9 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 		}
 
 		let unsubscribe: () => void;
-		if(receiver){
-			api.derive.balances.account(receiver,
+		const recv = parseReceiver(receiver);
+		if(recv){
+			api.derive.balances.account(recv,
 				data => setReceiverBalance( data.freeBalance.toString()))
 				.then( unsub => {unsubscribe = unsub;})
 				.catch(console.error);
@@ -119,13 +122,16 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 		setAmount(data.value);
 	};
 
-	const checkValue = (amount: string) => {
+	const checkValue = (rawAmount: string) => {
+		const amount = parseAmount(rawAmount);
 		if( !amount || amount.match(/^\d+(,\d+)*(\.\d+)?$/)){
 			setErrorMessage('');
 		} else {
 			setErrorMessage('Wrong amount.');
 		}
 	};
+
+	const receiverAddress = parseReceiver(receiver);
 
 	return (
 		<Container className={className}>
@@ -150,10 +156,10 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 					</Grid.Column>
 					<Grid.Column className='accountCard' width={5}>
 						<div className='balance'>SUB account</div>
-						{!!receiver && (
+						{!!receiverAddress && (
 							<>
-								<Identicon size={52} value={receiver}/>
-								<div>{shortenAddress(receiver)}</div>
+								<Identicon size={52} value={receiverAddress}/>
+								<div>{shortenAddress(receiverAddress)}</div>
 								<div className='balance'>{formatBalance(receiverBalance, { withUnit: false })} SUB</div>
 							</>
 						)}
@@ -164,7 +170,7 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 						className='largeInput'
 						disabled={sendStatus.sending}
 						label='Receiver'
-						placeholder='5Ev8deqBc5bXB2pq2C9RWCBXM1kuS6wjqbZJiSRTA8kLZfTu'
+						placeholder='alice|bob|... or 5Ev8deqBc5bXB2pq2C9RWCBXM1kuS6wjqbZJiSRTA8kLZfTu'
 						onChange={changeReceiver}
 						value={receiver}
 					/>
@@ -199,6 +205,35 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 		</Container>
 	);
 };
+
+function parseAmount(val: string|null) {
+	if (!val) {
+		return val;
+	}
+
+	return val.replace(/k/gi, '000').replace(/m/gi, '000000');
+}
+
+function parseReceiver(recv: string|null): string|null {
+	if (!recv) {
+		return recv;
+	}
+
+	const addresses = {
+		'alice': '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+		'alicestash': '5GNJqTPyNqANBkUVMN1LPPrxXnFouWXoe2wNSmmEoLctxiZY',
+		'bob': '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty',
+		'bobstash': '5HpG9w8EBLe5XCrbczpwq5TSXvedjrBGCwqxK1iQ7qUsSWFc',
+		'charlie': '5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y',
+		'dave': '5DAAnrj7VHTznn2AWBemMuyBwZWs6FNFjdyVXUeYum3PTXFy',
+		'eve': '5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw',
+		'ferdie': '5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL',
+		'joshy': '5Ev8deqBc5bXB2pq2C9RWCBXM1kuS6wjqbZJiSRTA8kLZfTu'
+	};
+
+	const v = recv.toLowerCase().replace(/[^a-z0-9]/, '') as keyof typeof addresses ;
+	return addresses[v] || recv;
+}
 
 export default styled(EthToSub)`
 	.arrow {
