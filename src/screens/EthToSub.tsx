@@ -16,6 +16,8 @@ import { ApiPromiseContext } from '../context/ApiPromiseContext';
 import useEthAccount from '../hooks/useEthAccount';
 import useEthBalance from '../hooks/useEthBalance';
 import useRialtoBlocks from '../hooks/useRialtoBlocks';
+import parseAmount from '../util/parseAmount';
+import parseReceiver from '../util/parseReceiver';
 import shortenAddress from '../util/shortenAddress';
 
 interface Props {
@@ -102,8 +104,8 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 		}
 
 		let unsubscribe: () => void;
-		const recv = parseReceiver(receiver);
-		if(recv){
+		if (receiver) {
+			const recv = parseReceiver(receiver);
 			api.derive.balances.account(recv,
 				data => setReceiverBalance( data.freeBalance.toString()))
 				.then( unsub => {unsubscribe = unsub;})
@@ -181,7 +183,7 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 						error={!!errorMessage}
 						disabled={sendStatus.sending}
 						label='Amount'
-						placeholder='1.23'
+						placeholder='1k|1M|1000'
 						onChange={changeValue}
 						value={amount}
 					/>
@@ -205,35 +207,6 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 		</Container>
 	);
 };
-
-function parseAmount(val: string|null) {
-	if (!val) {
-		return val;
-	}
-
-	return val.replace(/k/gi, '000').replace(/m/gi, '000000');
-}
-
-function parseReceiver(recv: string|null): string|null {
-	if (!recv) {
-		return recv;
-	}
-
-	const addresses = {
-		'alice': '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
-		'alicestash': '5GNJqTPyNqANBkUVMN1LPPrxXnFouWXoe2wNSmmEoLctxiZY',
-		'bob': '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty',
-		'bobstash': '5HpG9w8EBLe5XCrbczpwq5TSXvedjrBGCwqxK1iQ7qUsSWFc',
-		'charlie': '5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y',
-		'dave': '5DAAnrj7VHTznn2AWBemMuyBwZWs6FNFjdyVXUeYum3PTXFy',
-		'eve': '5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw',
-		'ferdie': '5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL',
-		'joshy': '5Ev8deqBc5bXB2pq2C9RWCBXM1kuS6wjqbZJiSRTA8kLZfTu'
-	};
-
-	const v = recv.toLowerCase().replace(/[^a-z0-9]/, '') as keyof typeof addresses ;
-	return addresses[v] || recv;
-}
 
 export default styled(EthToSub)`
 	.arrow {
