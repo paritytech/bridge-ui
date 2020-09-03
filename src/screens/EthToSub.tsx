@@ -16,8 +16,11 @@ import { ApiPromiseContext } from '../context/ApiPromiseContext';
 import useEthAccount from '../hooks/useEthAccount';
 import useEthBalance from '../hooks/useEthBalance';
 import useRialtoBlocks from '../hooks/useRialtoBlocks';
+
 import parseAmount from '../util/parseAmount';
 import parseReceiver from '../util/parseReceiver';
+import { toEthBalance, toSubBalance } from '../util/balance';
+
 import shortenAddress from '../util/shortenAddress';
 
 interface Props {
@@ -149,7 +152,12 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 							<>
 								<div>{!!imgSrc && <img src={imgSrc} height={52}/>}</div>
 								<div>{shortenAddress(ethAccount, true)}</div>
-								<div className='balance'>{ethers.utils.formatEther(ethAccountBalance)} ETH</div>
+								<div
+									className='balance'
+									title={ethers.utils.formatEther(ethAccountBalance)}
+								>
+									{toEthBalance(ethAccountBalance)} ETH
+								</div>
 							</>
 						)}
 					</Grid.Column>
@@ -162,7 +170,16 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 							<>
 								<Identicon size={52} value={receiverAddress}/>
 								<div>{shortenAddress(receiverAddress)}</div>
-								<div className='balance'>{formatBalance(receiverBalance, { withUnit: false })} SUB</div>
+								<div
+									className='balance'
+									title={formatBalance(receiverBalance, {
+										withSi: false,
+										withSiFull: false,
+										withUnit: false
+									})}
+								>
+									{toSubBalance(receiverBalance)} SUB
+								</div>
 							</>
 						)}
 					</Grid.Column>
@@ -227,6 +244,8 @@ export default styled(EthToSub)`
 	.balance{
 		font-weight: 800;
 		font-size: large;
+	text-overflow: ellipsis;
+	overflow: hidden;
 	}
 
 	.accountCard {
