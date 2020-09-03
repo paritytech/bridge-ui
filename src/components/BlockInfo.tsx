@@ -25,26 +25,30 @@ const BlockInfo = ({ className, ethProvider }: Props) => {
 		<Grid className={className}>
 			<Grid.Row>
 				<Grid.Column width={2}/>
-				<Grid.Column width={4} className='blockInfo'>
+				<Grid.Column width={6} className='blockInfo'>
 					<div>
 						<h2>Ethereum</h2>
 						<div className='blockNumber'>Best: #{blockNumber}</div>
+						<div className='info'>Best block of the Rialto-POA network.</div>
 					</div>
 				</Grid.Column>
-				<Grid.Column width={4} className='blockInfo'>
-					<div>
-						<h2>Bridge</h2>
-						<div className='blockNumber'>
-								Best: #{bestRialtoBlock}<br/>
-								Finalized: #{bestRialtoFinalizedBlock}<br/>
-						</div>
-					</div>
-				</Grid.Column>
-				<Grid.Column width={4} className='blockInfo'>
+				<Grid.Column width={6} className='blockInfo'>
 					<div>
 						<h2>Substrate</h2>
 						<div className='blockNumber'>
-							Best: #{bestSubBlock}<br/>
+              Best: #{bestSubBlock}<br/>
+							<div className='info'>Best block of the Rialto-SUB network.</div>
+						</div>
+						<div className='blockInfo' title="The state of the PoA Light Client">
+							<h4>Bridge Pallet</h4>
+							<div className='blockNumber'>
+                Best: <strong>#{bestRialtoBlock}</strong>
+							</div>
+							<div className='info'>Best relayed PoA block</div>
+							<div className='blockNumber'>
+                Finalized: <strong>#{bestRialtoFinalizedBlock}</strong>
+							</div>
+							<div className='info'>Best known finalized PoA block</div>
 						</div>
 					</div>
 				</Grid.Column>
@@ -59,6 +63,21 @@ export default styled(BlockInfo)`
 		margin: .5rem;
 		border-radius: 0.2rem;
 		padding: .5rem;
-		text-align: center;
+		text-align: left;
 	}
+
+  .blockInfo .info {
+    margin-bottom: 1rem;
+  }
+
+  .blockInfo h2,
+  .blockInfo h4 {
+    text-align: center;
+  }
+
+  .blockInfo .blockInfo {
+    padding: 1rem;
+    text-align: left;
+		background: #d3d3d342;
+  }
 `;

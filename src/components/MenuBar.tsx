@@ -8,7 +8,7 @@ import { Menu } from 'semantic-ui-react';
 const Header = () => (
 	<Menu pointing secondary>
 		<Menu.Item>
-          Bridge UI
+          Rialto Bridge UI
 		</Menu.Item>
 
 		{/* <Menu.Item  name='ETH to SUB' href="#"/> */}
