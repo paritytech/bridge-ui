@@ -16,6 +16,7 @@ import { ApiPromiseContext } from '../context/ApiPromiseContext';
 import useEthAccount from '../hooks/useEthAccount';
 import useEthBalance from '../hooks/useEthBalance';
 import useRialtoBlocks from '../hooks/useRialtoBlocks';
+import { toEthBalance, toSubBalance } from '../util/balance';
 import shortenAddress from '../util/shortenAddress';
 
 interface Props {
@@ -167,7 +168,7 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 										withUnit: false
 									})}
 								>
-									{toBalance(receiverBalance)} SUB
+									{toSubBalance(receiverBalance)} SUB
 								</div>
 							</>
 						)}
@@ -213,24 +214,6 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 		</Container>
 	);
 };
-
-function toEthBalance(v: BigInt) {
-	return formatBalance(v.toString(), {
-		decimals: 18,
-		withSi: true,
-		withSiFull: true,
-		withUnit: false
-	});
-}
-
-function toBalance(v: number|string) {
-	return formatBalance(v, {
-		decimals: 9,
-		withSi: true,
-		withSiFull: false,
-		withUnit: false
-	});
-}
 
 export default styled(EthToSub)`
 	.arrow {
