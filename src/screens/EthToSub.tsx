@@ -16,11 +16,9 @@ import { ApiPromiseContext } from '../context/ApiPromiseContext';
 import useEthAccount from '../hooks/useEthAccount';
 import useEthBalance from '../hooks/useEthBalance';
 import useRialtoBlocks from '../hooks/useRialtoBlocks';
-
+import { toEthBalance, toSubBalance } from '../util/balance';
 import parseAmount from '../util/parseAmount';
 import parseReceiver from '../util/parseReceiver';
-import { toEthBalance, toSubBalance } from '../util/balance';
-
 import shortenAddress from '../util/shortenAddress';
 
 interface Props {
