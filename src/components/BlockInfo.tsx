@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import useEthBlockNumber from '../hooks/useEthBlockNumber';
 import useRialtoBlocks from '../hooks/useRialtoBlocks';
 import useSubBlocks from '../hooks/useSubstrateBlocks';
+import HelperTooltip from './HelperTooltip';
 
 interface Props {
 	className? : string;
@@ -28,27 +29,23 @@ const BlockInfo = ({ className, ethProvider }: Props) => {
 				<Grid.Column width={6} className='blockInfo'>
 					<div>
 						<h2>Ethereum</h2>
-						<div className='blockNumber'>Best: #{blockNumber}</div>
-						<div className='info'>Best block of the Rialto-POA network.</div>
+						<div className='blockNumber'>Best<HelperTooltip content='Best block of the Rialto-POA network.'/>: #{blockNumber}</div>
 					</div>
 				</Grid.Column>
 				<Grid.Column width={6} className='blockInfo'>
 					<div>
 						<h2>Substrate</h2>
 						<div className='blockNumber'>
-              Best: #{bestSubBlock}<br/>
-							<div className='info'>Best block of the Rialto-SUB network.</div>
+							Best<HelperTooltip content='Best block of the Rialto-SUB network.'/>: #{bestSubBlock}<br/>
 						</div>
 						<div className='blockInfo' title="The state of the PoA Light Client">
 							<h4>Bridge Pallet</h4>
 							<div className='blockNumber'>
-                Best: <strong>#{bestRialtoBlock}</strong>
+								Best<HelperTooltip content='Best relayed PoA block.'/>: <strong>#{bestRialtoBlock}</strong>
 							</div>
-							<div className='info'>Best relayed PoA block</div>
 							<div className='blockNumber'>
-                Finalized: <strong>#{bestRialtoFinalizedBlock}</strong>
+								Finalized<HelperTooltip content='Best known finalized PoA block'/>: <strong>#{bestRialtoFinalizedBlock}</strong>
 							</div>
-							<div className='info'>Best known finalized PoA block</div>
 						</div>
 					</div>
 				</Grid.Column>
@@ -58,26 +55,21 @@ const BlockInfo = ({ className, ethProvider }: Props) => {
 };
 
 export default styled(BlockInfo)`
-	.blockInfo{
+	.blockInfo {
 		background: #d3d3d342;
 		margin: .5rem;
 		border-radius: 0.2rem;
 		padding: .5rem;
 		text-align: left;
+
+		h2, h4 {
+			text-align: center;
+		}
+
+		.blockInfo {
+			padding: 1rem;
+			text-align: left;
+			background: #d3d3d342;
+		}
 	}
-
-  .blockInfo .info {
-    margin-bottom: 1rem;
-  }
-
-  .blockInfo h2,
-  .blockInfo h4 {
-    text-align: center;
-  }
-
-  .blockInfo .blockInfo {
-    padding: 1rem;
-    text-align: left;
-		background: #d3d3d342;
-  }
 `;
