@@ -141,7 +141,12 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 							<>
 								<div>{!!imgSrc && <img src={imgSrc} height={52}/>}</div>
 								<div>{shortenAddress(ethAccount, true)}</div>
-								<div className='balance'>{ethers.utils.formatEther(ethAccountBalance)} ETH</div>
+								<div
+									className='balance'
+									title={ethers.utils.formatEther(ethAccountBalance)}
+								>
+									{toEthBalance(ethAccountBalance)} ETH
+								</div>
 							</>
 						)}
 					</Grid.Column>
@@ -154,7 +159,16 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 							<>
 								<Identicon size={52} value={receiver}/>
 								<div>{shortenAddress(receiver)}</div>
-								<div className='balance'>{formatBalance(receiverBalance, { withUnit: false })} SUB</div>
+								<div
+									className='balance'
+									title={formatBalance(receiverBalance, {
+										withSi: false,
+										withSiFull: false,
+										withUnit: false
+									})}
+								>
+									{toBalance(receiverBalance)} SUB
+								</div>
 							</>
 						)}
 					</Grid.Column>
@@ -200,6 +214,24 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 	);
 };
 
+function toEthBalance(v: BigInt) {
+	return formatBalance(v.toString(), {
+		decimals: 18,
+		withSi: true,
+		withSiFull: true,
+		withUnit: false
+	});
+}
+
+function toBalance(v: number|string) {
+	return formatBalance(v, {
+		decimals: 9,
+		withSi: true,
+		withSiFull: false,
+		withUnit: false
+	});
+}
+
 export default styled(EthToSub)`
 	.arrow {
 		text-align: center;
@@ -219,6 +251,8 @@ export default styled(EthToSub)`
 	.balance{
 		font-weight: 800;
 		font-size: large;
+    text-overflow: ellipsis;
+    overflow: hidden;
 	}
 
 	.accountCard {
