@@ -1,7 +1,7 @@
 # Bridge-ui
 
 This repo hosts a simple interface to send tokens using the [Rialto bridge](https://github.com/paritytech/parity-bridges-common) between an Ethereum network and a Substrate network (one way).
-Metamask is required to sign Ethereum transactions.
+Metamask (connected to Rialto network) is required to sign Ethereum transactions. The interface automatically connects to Rialto's Substrate nodes (no configuration or plugin required).
 
 The interface is available at: [https://paritytech.github.io/bridge-ui](https://paritytech.github.io/bridge-ui)
 
