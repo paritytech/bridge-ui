@@ -13,12 +13,10 @@ interface Props {
 const useEthBalance = ({ account, ethProvider }: Props) => {
 	const [balance, setBalance] = useState(BigNumber.from(0));
 
-	const getBalance = ethProvider.getBalance(account)
-		.then(b => setBalance(b));
-
 	useEffect(() => {
-		ethProvider.on('block', () => getBalance);
-	}, [ethProvider, getBalance]);
+		ethProvider.on('block', () => ethProvider.getBalance(account)
+			.then(b => setBalance(b)));
+	}, [account, ethProvider]);
 
 	return { balance };
 };
