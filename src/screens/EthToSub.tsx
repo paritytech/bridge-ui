@@ -251,8 +251,8 @@ export default styled(EthToSub)`
 	.balance{
 		font-weight: 800;
 		font-size: large;
-    text-overflow: ellipsis;
-    overflow: hidden;
+	text-overflow: ellipsis;
+	overflow: hidden;
 	}
 
 	.accountCard {
