@@ -13,7 +13,7 @@ interface Props {
 const useEthBalance = ({ account, ethProvider }: Props) => {
 	const [balance, setBalance] = useState(BigNumber.from(0));
 
-	const setBalanceHandler = useCallback(() => {
+	const getBalanceHandler = useCallback(() => {
 		if (!account) {
 			return;
 		}
@@ -25,18 +25,18 @@ const useEthBalance = ({ account, ethProvider }: Props) => {
 	},[account, ethProvider]);
 
 	useEffect(() => {
-		// update the updated balance on every new block
-		ethProvider.on('block', setBalanceHandler);
+		// update the balance on every new block
+		ethProvider.on('block', getBalanceHandler);
 
 		// on account change, de-register the previous listener.
-		return () => {ethProvider.removeListener('block', setBalanceHandler);};
+		return () => {ethProvider.removeListener('block', getBalanceHandler);};
 
-	}, [ethProvider, setBalanceHandler]);
+	}, [ethProvider, getBalanceHandler]);
 
-	// get the balance on account change
+	// get the balance on account change right away without waiting for the next block
 	useEffect(() => {
-		setBalanceHandler();
-	}, [account, setBalanceHandler]);
+		getBalanceHandler();
+	}, [account, getBalanceHandler]);
 
 	return { balance };
 };
