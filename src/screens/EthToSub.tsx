@@ -12,11 +12,14 @@ import { Button, Container, Grid,Icon, Input, InputOnChangeData, Loader } from '
 import styled from 'styled-components';
 
 import BlockInfo from '../components/BlockInfo';
+import { addresses } from '../constants';
 import { ApiPromiseContext } from '../context/ApiPromiseContext';
 import useEthAccount from '../hooks/useEthAccount';
 import useEthBalance from '../hooks/useEthBalance';
 import useRialtoBlocks from '../hooks/useRialtoBlocks';
 import { toEthBalance, toSubBalance } from '../util/balance';
+import parseAmount from '../util/parseAmount';
+import parseReceiver from '../util/parseReceiver';
 import shortenAddress from '../util/shortenAddress';
 
 interface Props {
@@ -38,8 +41,10 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 	const signer = ethProvider.getSigner();
 
 	const [errorMessage, setErrorMessage] = useState('');
+	const [amountInput, setAmountInput] = useState('');
 	const [amount, setAmount] = useState('');
-	const [receiver, setReceiver] = useState('');
+	const [receiver, setReceiver] = useState('joshy');
+	const [receiverAddress, setReceiverAddress] = useState(addresses['joshy']);
 	const [receiverBalance, setReceiverBalance] = useState('');
 	const { ethAccount } = useEthAccount();
 	const { balance: ethAccountBalance } = useEthBalance({ account: ethAccount , ethProvider });
@@ -55,7 +60,7 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 		});
 
 		signer.sendTransaction({
-			data: u8aToHex(keyring.decodeAddress(receiver)),
+			data: u8aToHex(keyring.decodeAddress(receiverAddress)),
 			to: '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF',
 			value: ethers.utils.parseEther(amount)
 		})
@@ -101,31 +106,32 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 		}
 
 		let unsubscribe: () => void;
-		if(receiver){
-			api.derive.balances.account(receiver,
+		if (receiverAddress) {
+			api.derive.balances.account(receiverAddress,
 				data => setReceiverBalance( data.freeBalance.toString()))
 				.then( unsub => {unsubscribe = unsub;})
 				.catch(console.error);
 		}
 
 		return () => unsubscribe && unsubscribe();
-	}, [api, isApiReady, receiver]);
+	}, [api, isApiReady, receiverAddress]);
 
-	const changeReceiver = (_: any , data: InputOnChangeData) => {
-		setReceiver(data.value);
-	};
-
-	const changeValue = (_: any , data: InputOnChangeData) => {
-		checkValue(data.value);
-		setAmount(data.value);
-	};
-
-	const checkValue = (amount: string) => {
-		if( !amount || amount.match(/^\d+(,\d+)*(\.\d+)?$/)){
+	useEffect(() => {
+		if( !amount || amount.match(/^\d+(\.\d+)?$/)){
 			setErrorMessage('');
 		} else {
 			setErrorMessage('Wrong amount.');
 		}
+	}, [amount]);
+
+	const changeReceiver = (_: any , data: InputOnChangeData) => {
+		setReceiver(data.value);
+		setReceiverAddress(parseReceiver(data.value));
+	};
+
+	const changeValue = (_: any , data: InputOnChangeData) => {
+		setAmountInput(data.value);
+		setAmount(parseAmount(data.value));
 	};
 
 	return (
@@ -146,7 +152,7 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 									className='balance'
 									title={ethers.utils.formatEther(ethAccountBalance)}
 								>
-									{toEthBalance(ethAccountBalance)} ETH
+									{toEthBalance(ethAccountBalance.toString())} ETH
 								</div>
 							</>
 						)}
@@ -156,10 +162,10 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 					</Grid.Column>
 					<Grid.Column className='accountCard' width={5}>
 						<div className='balance'>SUB account</div>
-						{!!receiver && (
+						{!!receiverAddress && (
 							<>
-								<Identicon size={52} value={receiver}/>
-								<div>{shortenAddress(receiver)}</div>
+								<Identicon size={52} value={receiverAddress}/>
+								<div>{shortenAddress(receiverAddress)}</div>
 								<div
 									className='balance'
 									title={formatBalance(receiverBalance, {
@@ -179,7 +185,7 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 						className='largeInput'
 						disabled={sendStatus.sending}
 						label='Receiver'
-						placeholder='5Ev8deqBc5bXB2pq2C9RWCBXM1kuS6wjqbZJiSRTA8kLZfTu'
+						placeholder='alice|bob|... or 5Ev8deqBc5bXB2pq2C9RWCBXM1kuS6wjqbZJiSRTA8kLZfTu'
 						onChange={changeReceiver}
 						value={receiver}
 					/>
@@ -190,15 +196,15 @@ const EthToSub = ({ className, ethProvider } : Props) => {
 						error={!!errorMessage}
 						disabled={sendStatus.sending}
 						label='Amount'
-						placeholder='1.23'
+						placeholder='1k|1M|1000'
 						onChange={changeValue}
-						value={amount}
+						value={amountInput}
 					/>
 				</Grid.Row>
 				{errorMessage && <div className='errorMessage'>{errorMessage}</div>}
 				<Grid.Row>
 					<Button
-						disabled={!!errorMessage || !amount}
+						disabled={!!errorMessage || !amountInput}
 						primary
 						onClick={() => !sendStatus.sending && sendTx()}
 
