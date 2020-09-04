@@ -3,7 +3,7 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 import { BigNumber, ethers } from 'ethers';
-import { useEffect, useState } from 'react';
+import { useCallback,useEffect, useState } from 'react';
 
 interface Props {
 	ethProvider: ethers.providers.Web3Provider;
@@ -12,15 +12,29 @@ interface Props {
 
 const useEthBalance = ({ account, ethProvider }: Props) => {
 	const [balance, setBalance] = useState(BigNumber.from(0));
+	const setBalanceHandler = useCallback(
+		() => {
+			if (!account) {
+				return;
+			}
+
+			ethProvider.getBalance(account)
+				.then(b => {
+					console.log('balance',b.toString());
+					setBalance(b);
+				});
+		},[account, ethProvider]);
 
 	useEffect(() => {
-		if (!account) {
-			return;
-		}
+		ethProvider.on('block', setBalanceHandler);
 
-		ethProvider.on('block', () => ethProvider.getBalance(account)
-			.then(b => setBalance(b)));
-	}, [account, ethProvider]);
+		return () => {ethProvider.removeListener('block', setBalanceHandler);};
+
+	}, [ethProvider, setBalanceHandler]);
+
+	useEffect(() => {
+		setBalanceHandler();
+	}, [account, setBalanceHandler]);
 
 	return { balance };
 };
