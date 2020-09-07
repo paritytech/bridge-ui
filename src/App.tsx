@@ -21,17 +21,21 @@ declare global {
 
 window.ethereum = window.ethereum || {};
 
-const WS_PROVIDER = 'wss://wss.rialto.brucke.link/';
-const ETHEREUM_NODE = 'http://rpc.rialto.brucke.link:8545';
-const EXPECTED_NETWORK_ID = 105; // Rialto
+const SUBSTRATE_PROVIDER = process.env.REACT_APP_SUBSTRATE_PROVIDER || 'wss://wss.rialto.brucke.link';
+const ETHEREUM_PROVIDER = process.env.REACT_APP_ETHEREUM_PROVIDER || 'http://rpc.rialto.brucke.link:8545';
+const EXPECTED_ETHEREUM_NETWORK_ID = Number(process.env.EXPECTED_ETHEREUM_NETWORK_ID) || 105; // Rialto
+
+console.log('Connecting to Substrate node:', SUBSTRATE_PROVIDER);
+console.log('Connecting to Ethereum node:', ETHEREUM_PROVIDER);
+console.log('Expected network id:', EXPECTED_ETHEREUM_NETWORK_ID);
 
 const App = () => {
-	if (!WS_PROVIDER) {
+	if (!SUBSTRATE_PROVIDER) {
 		console.error('Env variable WS_PROVIDER not set');
 		return null;
 	}
 
-	const wsProvider = new WsProvider(WS_PROVIDER);
+	const wsProvider = new WsProvider(SUBSTRATE_PROVIDER);
 	let ethProvider: ethers.providers.Web3Provider;
 
 	try {
@@ -64,12 +68,15 @@ const App = () => {
 		window.location.reload();
 	});
 
-	if (Number(window.ethereum.networkVersion) !== EXPECTED_NETWORK_ID){
+	const networkId = Number(window.ethereum.networkVersion);
+	if ( networkId !== EXPECTED_ETHEREUM_NETWORK_ID){
+		console.error(`Expecting network ${EXPECTED_ETHEREUM_NETWORK_ID}, but got ${networkId}`);
+
 		return (
 			<ErrorMessage>
 				<>
 					<h1><Icon name='warning circle'/>Unexpected network</h1>
-					<h3>Please connect Metamask to Rialto (using {ETHEREUM_NODE})</h3>
+					<h3>Please connect Metamask to Rialto (using {ETHEREUM_PROVIDER})</h3>
 				</>
 			</ErrorMessage>
 		);
