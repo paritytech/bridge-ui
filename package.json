@@ -9,6 +9,7 @@
   "scripts": {
     "clean": "rm dist/bundle.js",
     "build": "rm -rf .cache dist && parcel build src/index.html --public-url /bridge-ui/",
+    "build:docker": "parcel build src/index.html",
     "lint": "npx eslint ./src/ --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "npx eslint ./src/ --ext .js,.jsx,.ts,.tsx --fix",
     "start": "parcel src/index.html",
