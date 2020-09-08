@@ -16,7 +16,7 @@ ETHEREUM_PROVIDER
 EXPECTED_ETHEREUM_NETWORK_ID
 ```
 
-To make it even simpler you can also use the predefined variables from the .env-example and override the values you want.
+To make it even simpler you can also use the predefined variables from the `.env` and override the values you want.
 ```bash
 mv .env-example .env
 ```
