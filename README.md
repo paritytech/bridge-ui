@@ -9,14 +9,14 @@ The interface is available at: [https://paritytech.github.io/bridge-ui](https://
 
 ### Environment variables
 
-Make sure to setup an .env file to select the Substrate and Ethereum nodes you want to connect to, using the following variables:
+You can setup an .env file to select the Substrate and Ethereum nodes you want to connect to, using the following variables:
 ```bash
 SUBSTRATE_PROVIDER
 ETHEREUM_PROVIDER
 EXPECTED_ETHEREUM_NETWORK_ID
 ```
 
-You can also use the predefined variables from the .env-example
+To make it even simpler you can also use the predefined variables from the .env-example and override the values you want.
 ```bash
 mv .env-example .env
 ```
