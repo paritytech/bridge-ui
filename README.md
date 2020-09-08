@@ -11,8 +11,8 @@ The interface is available at: [https://paritytech.github.io/bridge-ui](https://
 
 Make sure to setup an .env file to select the Substrate and Ethereum nodes you want to connect to, using the following variables:
 ```bash
-REACT_APP_SUBSTRATE_PROVIDER
-REACT_APP_ETHEREUM_PROVIDER
+SUBSTRATE_PROVIDER
+ETHEREUM_PROVIDER
 EXPECTED_ETHEREUM_NETWORK_ID
 ```
 

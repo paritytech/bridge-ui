@@ -21,8 +21,8 @@ declare global {
 
 window.ethereum = window.ethereum || {};
 
-const SUBSTRATE_PROVIDER = process.env.REACT_APP_SUBSTRATE_PROVIDER || 'wss://wss.rialto.brucke.link';
-const ETHEREUM_PROVIDER = process.env.REACT_APP_ETHEREUM_PROVIDER || 'http://rpc.rialto.brucke.link:8545';
+const SUBSTRATE_PROVIDER = process.env.SUBSTRATE_PROVIDER || 'wss://wss.rialto.brucke.link';
+const ETHEREUM_PROVIDER = process.env.ETHEREUM_PROVIDER || 'http://rpc.rialto.brucke.link:8545';
 const EXPECTED_ETHEREUM_NETWORK_ID = Number(process.env.EXPECTED_ETHEREUM_NETWORK_ID) || 105; // Rialto
 
 console.log('Connecting to Substrate node:', SUBSTRATE_PROVIDER);
