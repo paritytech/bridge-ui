@@ -7,6 +7,15 @@ The interface is available at: [https://paritytech.github.io/bridge-ui](https://
 
 ## Building and running locally
 
+### Environment variables
+
+You can set the Substrate and Ethereum nodes you want to connect to, by overriding the following variables in the `.env` file:
+```bash
+SUBSTRATE_PROVIDER
+ETHEREUM_PROVIDER
+EXPECTED_ETHEREUM_NETWORK_ID
+```
+
 ### Development
 First install dependencies:
 
