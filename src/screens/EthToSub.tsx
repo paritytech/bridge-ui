@@ -5,6 +5,7 @@
 import { Keyring } from '@polkadot/api';
 import Identicon from '@polkadot/react-identicon';
 import { formatBalance, u8aToHex } from '@polkadot/util';
+import { ApiPromiseContext } from '@substrate/react-context';
 import * as blockies from 'blockies-ts';
 import { ethers } from 'ethers';
 import React, { useContext, useEffect, useMemo,useState } from 'react';
@@ -13,7 +14,6 @@ import styled from 'styled-components';
 
 import BlockInfo from '../components/BlockInfo';
 import { addresses } from '../constants';
-import { ApiPromiseContext } from '../context/ApiPromiseContext';
 import useEthAccount from '../hooks/useEthAccount';
 import useEthBalance from '../hooks/useEthBalance';
 import useRialtoBlocks from '../hooks/useRialtoBlocks';

@@ -4,13 +4,13 @@
 import 'semantic-ui-css/semantic.min.css';
 
 import { WsProvider } from '@polkadot/api';
+import { ApiPromiseContextProvider } from '@substrate/react-context';
 import { ethers } from 'ethers';
 import React from 'react';
 import { Icon } from 'semantic-ui-react';
 
 import ErrorMessage from './components/ErrorMessage';
 import Menu from './components/MenuBar';
-import { ApiPromiseContextProvider } from './context/ApiPromiseContext';
 import customTypes from './customTypes';
 import EthToSub from './screens/EthToSub';
 
