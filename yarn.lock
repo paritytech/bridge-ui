@@ -1410,16 +1410,6 @@
     eventemitter3 "^4.0.7"
     rxjs "^6.6.3"
 
-"@polkadot/extension-dapp@^0.34.1":
-  version "0.34.1"
-  resolved "https://registry.yarnpkg.com/@polkadot/extension-dapp/-/extension-dapp-0.34.1.tgz#5dd84bc24d33d36ea5d2b97826a93f1a48370aa4"
-  integrity sha512-/wHAEpAxmlX5yq9t9a5EuXZEBSksreL7wH+h7XX5970v0XTAOFp+gyvDaWSThbLembq1Xq6eAkM1qrtemLXJLQ==
-  dependencies:
-    "@babel/runtime" "^7.11.2"
-    "@polkadot/extension-inject" "0.34.1"
-    "@polkadot/util" "^3.4.1"
-    "@polkadot/util-crypto" "^3.4.1"
-
 "@polkadot/extension-inject@0.34.1":
   version "0.34.1"
   resolved "https://registry.yarnpkg.com/@polkadot/extension-inject/-/extension-inject-0.34.1.tgz#b62e131bf5398d07790ad2c5a39b0eece1d6065d"
@@ -1581,12 +1571,11 @@
     custom-event "^1.0.1"
     node-localstorage "^2.1.5"
 
-"@substrate/react-context@^0.7.1-beta1":
-  version "0.7.1-beta1"
-  resolved "https://registry.yarnpkg.com/@substrate/react-context/-/react-context-0.7.1-beta1.tgz#eb6ceca98a5510f387cd81873b3bfd4f4489a520"
-  integrity sha512-WJnDMaVxFts3hy15OfbWhMGIugOYoe/MIoCFDXggvxhK7TOnmM/KvKz1FImLIt9xyfBTKt0GOkgVthYjdMJBHA==
+"@substrate/react-context@^0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@substrate/react-context/-/react-context-0.7.2.tgz#52433d85320604cd04c5b9e2c68c8a7ce90b937c"
+  integrity sha512-T/0yKPYtcKtuyiGvGSZfbvrUrpz5mi3HI0EbDVkz5xowx4iqfvTUUhkdhpMqI2lzThLVWAvLgVHq+ElfDg5Ccg==
   dependencies:
-    "@polkadot/extension-dapp" "^0.34.1"
     "@substrate/local-storage" "^2.2.9"
 
 "@types/bn.js@^4.11.6":
