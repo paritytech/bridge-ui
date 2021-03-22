@@ -5,6 +5,10 @@ Metamask (connected to Rialto network) is required to sign Ethereum transactions
 
 The interface is available at: [https://paritytech.github.io/bridge-ui](https://paritytech.github.io/bridge-ui)
 
+## Deprecation notice
+
+This repo is deprecated, the work for Bridge UI continues in [https://paritytech.github.io/parity-bridges-ui](https://paritytech.github.io/parity-bridges-ui)
+
 ## Building and running locally
 
 ### Environment variables
