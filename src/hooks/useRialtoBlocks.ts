@@ -4,10 +4,9 @@
 
 import { Hash } from '@polkadot/types/interfaces';
 import { Codec } from '@polkadot/types/types';
+import { ApiPromiseContext } from '@substrate/react-context';
 import BN from 'bn.js';
 import { useContext,useEffect, useState } from 'react';
-
-import { ApiPromiseContext } from '../context/ApiPromiseContext';
 
 interface HeaderId{
 	number: BN,
